@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProjectGuid>{A62979E8-0192-4475-A2D3-3BC131B554FB}</ProjectGuid>
+    <TargetFramework>net35</TargetFramework>
+    <Deterministic>false</Deterministic>
+    <AssemblyTitle>DistrictStylesPlus</AssemblyTitle>
+    <AssemblyVersion>1.0.*</AssemblyVersion>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CitiesHarmony.API" Version="2.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\_managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ColossalManaged">
+      <HintPath>..\_managed\ColossalManaged.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ICities">
+      <HintPath>..\_managed\ICities.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\_managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <Target Name="DeployToModDirectory" AfterTargets="Build">
+    <PropertyGroup>
+      <ModDirectory>$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(ProjectName)\</ModDirectory>
+    </PropertyGroup>
+    <ItemGroup>
+      <ModFiles Include="$(TargetDir)*.*" />
+    </ItemGroup>
+    <RemoveDir Directories="$(ModDirectory)" />
+    <Copy SourceFiles="@(ModFiles)" DestinationFolder="$(ModDirectory)" />
+  </Target>
+</Project>

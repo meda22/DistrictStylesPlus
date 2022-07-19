@@ -1,0 +1,42 @@
+﻿using System.Collections.Generic;
+using ColossalFramework;
+using DistrictStylesPlus.Code.Utils;
+
+namespace DistrictStylesPlus.Code.Managers
+{
+    public class DistrictStylesPlusManager : Singleton<DistrictStylesPlusManager>
+    {
+
+        /// <summary>
+        /// List of all growable assets in game
+        /// </summary>
+        internal List<BuildingInfo> BuildingInfoList = new List<BuildingInfo>();
+        
+        /// <summary>
+        /// Initial setup of BuildingThemeManager
+        /// </summary>
+        public void SetupDistrictStylesPlusManager()
+        {
+            SetupBuildingInfoList();
+            DSPDistrictStylePackageManager.AddEmptyEnabledStylesToGame();
+            DSPDistrictStylePackageManager.LoadVanillaBuildingsToStyles();
+        }
+        
+        private void SetupBuildingInfoList()
+        {
+            for (uint i = 0; i < PrefabCollection<BuildingInfo>.PrefabCount(); i++)
+            {
+                var buildingInfo = PrefabCollection<BuildingInfo>.GetPrefab(i);
+
+                if (buildingInfo == null) continue;
+
+                var privateServiceIndex = ItemClass.GetPrivateServiceIndex(buildingInfo.GetService());
+
+                // if building is not growable asset do nothing
+                if (privateServiceIndex == -1) continue;
+
+                BuildingInfoList.Add(buildingInfo);
+            }
+        }
+    }
+}

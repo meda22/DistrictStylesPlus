@@ -1,0 +1,4 @@
+- fix UI refreshes after deleting style
+- check that refreshes working fine after UI actions
+- Add option that style is restrictive - allows only buildings in style for given zone
+- Check if possible to allow building level up on same prefab without historical option
