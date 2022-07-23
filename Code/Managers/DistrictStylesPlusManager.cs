@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ColossalFramework;
-using DistrictStylesPlus.Code.Utils;
 
 namespace DistrictStylesPlus.Code.Managers
 {
@@ -20,6 +19,7 @@ namespace DistrictStylesPlus.Code.Managers
             SetupBuildingInfoList();
             DSPDistrictStylePackageManager.AddEmptyEnabledStylesToGame();
             DSPDistrictStylePackageManager.LoadVanillaBuildingsToStyles();
+            DSPBuildingManager.instance.RefreshStylesInBuildingManager();
         }
         
         private void SetupBuildingInfoList()

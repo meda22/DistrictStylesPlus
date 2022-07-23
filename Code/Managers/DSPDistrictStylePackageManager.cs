@@ -13,7 +13,7 @@ namespace DistrictStylesPlus.Code.Managers
     public static class DSPDistrictStylePackageManager
     {
         
-        public const string VanillaPrefix = "BuiltIn";
+        public const string VanillaPrefix = "System";
         
         internal static void RemoveDistrictStylePackage(string dsFullName)
         {

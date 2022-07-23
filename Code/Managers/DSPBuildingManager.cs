@@ -47,8 +47,6 @@ namespace DistrictStylesPlus.Code.Managers
                 var m = AccessTools.Method(typeof(BuildingManager),"ApplyRefreshBuildingsStyles");
                 Logging.DebugLog("INVOKING");
                 m.Invoke(Singleton<BuildingManager>.instance, p);
-                //TODO: check if following is needed:
-                //BuildingManagerPatch.ApplyRefreshBuildingsStyles(Singleton<BuildingManager>.instance, buildingInfos, buildingIndices, i + 1);
             }
             
             // flag we are starting to refresh buildings
