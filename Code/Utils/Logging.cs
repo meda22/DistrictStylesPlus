@@ -10,9 +10,6 @@ namespace DistrictStylesPlus.Code.Utils
     /// </summary>
     internal static class Logging
     {
-        // TODO: false by default in the future
-        internal static bool DebugLogging = true;
-        
         private static readonly string LogModName = DistrictStylesPlusMod.modName;
         
         /// <summary>
@@ -33,7 +30,7 @@ namespace DistrictStylesPlus.Code.Utils
         /// <param name="messages">messages to log</param>
         internal static void DebugLog(params string[] messages)
         {
-            if (DebugLogging) WriteMessage("DEBUG: ", messages);
+            if (ModSettings.enableDebugLog) WriteMessage("DEBUG: ", messages);
         }
         
         /// <summary>

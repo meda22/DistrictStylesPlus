@@ -1,5 +1,7 @@
-﻿using CitiesHarmony.API;
+﻿using System;
+using CitiesHarmony.API;
 using DistrictStylesPlus.Code.Patches;
+using DistrictStylesPlus.Code.Utils;
 using ICities;
 
 namespace DistrictStylesPlus.Code
@@ -25,6 +27,8 @@ namespace DistrictStylesPlus.Code
             // Called here instead of OnCreated to allow the auto-downloader to do its work prior to launch.
             HarmonyHelper.DoOnHarmonyReady(Patcher.PatchAll);
             
+            SettingsUtils.LoadSettings();
+            
             // TODO: add attaching of options panel hook if any options panel ever exists
         }
         
@@ -42,7 +46,36 @@ namespace DistrictStylesPlus.Code
 
         public void OnSettingsUI(UIHelperBase uiHelperBase)
         {
-            
+            var group = uiHelperBase.AddGroup("District Styles Plus");
+
+            try
+            {
+
+                group.AddCheckbox(
+                    "Generate Debug Log", 
+                    ModSettings.enableDebugLog, 
+                    delegate(bool c)
+                    {
+                        ModSettings.enableDebugLog = c; 
+                        SettingsUtils.SaveSettings();
+                    });
+                
+                group.AddCheckbox(
+                    "Check affected services by level too", 
+                    ModSettings.checkServiceLevel, 
+                    delegate(bool c)
+                    {
+                        ModSettings.checkServiceLevel = c; 
+                        SettingsUtils.SaveSettings();
+                    });
+            }
+            catch (Exception)
+            {
+                group.AddGroup("District Styles Plus is unable to read the DistrictStylesPlus.xml file\n" +
+                               "that stores configuration of mod!\n" +
+                               "To fix it, delete this file and restart the game:\n" +
+                               "{Steam folder}\\steamapps\\common\\Cities_Skylines\\DistrictStylesPlus.xml");
+            }
         }
         
     }
