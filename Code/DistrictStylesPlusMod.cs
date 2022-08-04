@@ -68,6 +68,15 @@ namespace DistrictStylesPlus.Code
                         ModSettings.checkServiceLevel = c; 
                         SettingsUtils.SaveSettings();
                     });
+                
+                group.AddCheckbox(
+                    "Keep building appearance on upgrade if new does not exist", 
+                    ModSettings.allowUpgradeSameAppearance, 
+                    delegate(bool c)
+                    {
+                        ModSettings.allowUpgradeSameAppearance = c; 
+                        SettingsUtils.SaveSettings();
+                    });
             }
             catch (Exception)
             {

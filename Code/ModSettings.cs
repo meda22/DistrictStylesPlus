@@ -13,6 +13,7 @@ namespace DistrictStylesPlus.Code
     {
         internal static bool enableDebugLog = false;
         internal static bool checkServiceLevel = true;
+        internal static bool allowUpgradeSameAppearance = false;
     }
     
 
@@ -24,7 +25,7 @@ namespace DistrictStylesPlus.Code
     {
         
         [XmlElement("enableDebugLog")]
-        [DefaultValue(false)]
+        //[DefaultValue(false)]
         public bool enableDebugLog
         {
             get => ModSettings.enableDebugLog;
@@ -32,11 +33,19 @@ namespace DistrictStylesPlus.Code
         }
         
         [XmlElement("checkServiceLevel")]
-        [DefaultValue(true)]
+        //[DefaultValue(true)]
         public bool checkServiceLevel
         {
             get => ModSettings.checkServiceLevel;
             set => ModSettings.checkServiceLevel = value;
+        }
+        
+        [XmlElement("allowUpgradeSameAppearance")]
+        //[DefaultValue(false)]
+        public bool allowUpgradeSameAppearance
+        {
+            get => ModSettings.allowUpgradeSameAppearance;
+            set => ModSettings.allowUpgradeSameAppearance = value;
         }
         
     }

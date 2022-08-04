@@ -10,6 +10,8 @@ namespace DistrictStylesPlus.Code.Managers
         /// List of all growable assets in game
         /// </summary>
         internal List<BuildingInfo> BuildingInfoList = new List<BuildingInfo>();
+
+        public static HashSet<ushort> KeepSameAppearanceBuildingIds = new HashSet<ushort>();
         
         /// <summary>
         /// Initial setup of BuildingThemeManager
