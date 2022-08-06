@@ -85,7 +85,7 @@ namespace DistrictStylesPlus.Code.GUI
 
         private FastList<object> FilterBuildingInfoList(List<BuildingInfo> buildingInfos)
         {
-            var filteredData = new FastList<object>();
+            var filteredData = new List<object>();
             var selectedDistrictStyle = UIDistrictStyleSelectPanel.SelectedDistrictStyle;
             
             for (var i = 0; i < buildingInfos.Count; i++)
@@ -110,9 +110,8 @@ namespace DistrictStylesPlus.Code.GUI
                     && item.GetClassLevel() != UIBuildingFilter.Instance.buildingLevel) continue;
 
                 // size
-                Vector2 buildingSize = UIBuildingFilter.Instance.buildingSize;
-                if (buildingSize != Vector2.zero 
-                    && new Vector2(item.m_cellWidth, item.m_cellLength) != buildingSize) continue;
+                Vector2 buildingSize = UIBuildingFilter.Instance.BuildingSize;
+                if (!FitExpectedSize(buildingSize, item)) continue;
 
                 // zone
                 if (!UIBuildingFilter.Instance.IsAllZoneSelected())
@@ -130,8 +129,32 @@ namespace DistrictStylesPlus.Code.GUI
 
                 filteredData.Add(item);
             }
+
+            var resultData = new FastList<object>();
+
+            if (filteredData.Count <= 0) return resultData;
             
-            return filteredData;
+            var sorted = filteredData
+                .OrderBy(item => ((BuildingInfo)item).m_class.m_service)
+                .ThenBy(item => ((BuildingInfo)item).m_class.m_subService)
+                .ThenBy(item => ((BuildingInfo)item).m_class.m_level)
+                .ThenBy(item => ((BuildingInfo)item).m_cellWidth)
+                .ThenBy(item => ((BuildingInfo)item).m_cellLength)
+                .ThenBy(item => BuildingInfoHelper.GetBuildingHeight((BuildingInfo)item));
+            foreach (var o in sorted)
+            {
+                resultData.Add(o);
+            }
+
+            return resultData;
+        }
+
+        private static bool FitExpectedSize(Vector2 expectedSize, BuildingInfo buildingInfo)
+        {
+            return expectedSize == Vector2.zero
+                   || (expectedSize.y == 0 && new Vector2(buildingInfo.m_cellWidth, 0) == expectedSize)
+                   || (expectedSize.y > 0 
+                       && new Vector2(buildingInfo.m_cellWidth, buildingInfo.m_cellLength) == expectedSize);
         }
 
         private void SetupIncludeNoneButton()

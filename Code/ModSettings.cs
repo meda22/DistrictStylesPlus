@@ -19,13 +19,14 @@ namespace DistrictStylesPlus.Code
 
     /// <summary>
     /// Mapping class xml file for mod configuration.
+    ///
+    /// TODO: set proper default values?
     /// </summary>
     [XmlRoot("SettingsFile")]
     public class XMLSettingsFile
     {
         
         [XmlElement("enableDebugLog")]
-        //[DefaultValue(false)]
         public bool enableDebugLog
         {
             get => ModSettings.enableDebugLog;
@@ -33,7 +34,6 @@ namespace DistrictStylesPlus.Code
         }
         
         [XmlElement("checkServiceLevel")]
-        //[DefaultValue(true)]
         public bool checkServiceLevel
         {
             get => ModSettings.checkServiceLevel;
@@ -41,7 +41,6 @@ namespace DistrictStylesPlus.Code
         }
         
         [XmlElement("allowUpgradeSameAppearance")]
-        //[DefaultValue(false)]
         public bool allowUpgradeSameAppearance
         {
             get => ModSettings.allowUpgradeSameAppearance;

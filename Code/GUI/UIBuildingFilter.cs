@@ -71,14 +71,10 @@ namespace DistrictStylesPlus.Code.GUI
             get { return (ItemClass.Level)(levelFilter.selectedIndex - 1); }
         }
 
-        public Vector2 buildingSize
-        {
-            get
-            {
-                if (sizeFilterX.selectedIndex == 0) return Vector2.zero;
-                return new Vector2(sizeFilterX.selectedIndex, sizeFilterY.selectedIndex + 1);
-            }
-        }
+        public Vector2 BuildingSize =>
+            sizeFilterX.selectedIndex == 0 ? 
+                Vector2.zero : 
+                new Vector2(sizeFilterX.selectedIndex, sizeFilterY.selectedIndex);
 
         public string buildingName
         {
@@ -245,6 +241,7 @@ namespace DistrictStylesPlus.Code.GUI
 
             sizeFilterY = UIUtils.CreateDropDown(this);
             sizeFilterY.width = 45;
+            sizeFilterY.AddItem("All");
             sizeFilterY.AddItem("1");
             sizeFilterY.AddItem("2");
             sizeFilterY.AddItem("3");
@@ -259,6 +256,7 @@ namespace DistrictStylesPlus.Code.GUI
                 {
                     sizeFilterX.width = 55;
                     xLabel.isVisible = false;
+                    sizeFilterY.selectedIndex = 0;
                     sizeFilterY.isVisible = false;
                 }
                 else
