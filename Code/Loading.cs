@@ -79,6 +79,7 @@ namespace DistrictStylesPlus.Code
             Singleton<DistrictStylesPlusManager>.instance.SetupDistrictStylesPlusManager();
             DistrictStyleEditorPanel.Initialize();
             MainButtonPanel.Initialize();
+            UIStylesSelectorReplacer.AddStyleSelectorToCityPanel();
 
             Logging.InfoLog("loading complete");
         }

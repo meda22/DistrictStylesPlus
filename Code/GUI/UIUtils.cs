@@ -239,5 +239,15 @@ namespace DistrictStylesPlus.Code.GUI
 
             return checkBox;
         }
+
+        public static UIDropDown CreatePlainDropDown(UIComponent parent, string goName)
+        {
+            var templatePanel = UITemplateManager.GetAsGameObject("OptionsDropdownTemplate").GetComponent<UIPanel>();
+            var templateDropDown = templatePanel.Find<UIDropDown>("Dropdown");
+            var gameObject = templateDropDown.gameObject;
+            gameObject.name = goName;
+            parent.AttachUIComponent(gameObject);
+            return templateDropDown;
+        }
     }
 }
