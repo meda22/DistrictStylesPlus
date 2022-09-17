@@ -8,7 +8,7 @@ namespace DistrictStylesPlus.Code.GUI
     {
         public static UIBuildingFilter Instance { get; private set; }
         
-        private const int NumOfCategories = 15;
+        private const int NumOfCategories = 18; // 18 types after new Promenades_Plazas DLC
         public UICheckBox[] zoningToggles;
         public UIButton allZones;
         public UIButton noZones;
@@ -63,7 +63,10 @@ namespace DistrictStylesPlus.Code.GUI
                 zoningToggles[(int)Category.Oil].isChecked &&
                 zoningToggles[(int)Category.Ore].isChecked &&
                 zoningToggles[(int)Category.Office].isChecked &&
-                zoningToggles[(int)Category.OfficeHightech].isChecked;
+                zoningToggles[(int)Category.OfficeHightech].isChecked &&
+                zoningToggles[(int)Category.ResidentialWallToWall].isChecked &&
+                zoningToggles[(int)Category.CommercialWallToWall].isChecked &&
+                zoningToggles[(int)Category.OfficeWallToWall].isChecked;
         }
 
         public ItemClass.Level buildingLevel
@@ -105,7 +108,7 @@ namespace DistrictStylesPlus.Code.GUI
             {
                 zoningToggles[i] = UIUtils.CreateIconToggle(this, CategoryIcons.atlases[i], CategoryIcons.spriteNames[i], CategoryIcons.spriteNames[i] + "Disabled");
                 zoningToggles[i].tooltip = CategoryIcons.tooltips[i];
-                zoningToggles[i].relativePosition = new Vector3(40 * i, 0);
+                zoningToggles[i].relativePosition = new Vector3(35 * i, 0);
                 zoningToggles[i].isChecked = true;
                 zoningToggles[i].readOnly = true;
                 zoningToggles[i].checkedBoxObject.isInteractive = false; // Don't eat my double click event please
@@ -139,10 +142,17 @@ namespace DistrictStylesPlus.Code.GUI
                 zoningToggles[(int)Category.OfficeHightech].isVisible = false;
             }
 
+            if (!PlatformService.IsDlcInstalled(SteamHelper.kPlazasAndPromenadesDLCAppID))
+            {
+                zoningToggles[(int)Category.ResidentialWallToWall].isVisible = false;
+                zoningToggles[(int)Category.CommercialWallToWall].isVisible = false;
+                zoningToggles[(int)Category.OfficeWallToWall].isVisible = false;
+            }
+
             allZones = UIUtils.CreateButton(this);
             allZones.width = 40;
             allZones.text = "All";
-            allZones.relativePosition = new Vector3(600, 5);
+            allZones.relativePosition = new Vector3(645, 5);
 
             allZones.eventClick += (c, p) =>
             {
@@ -156,7 +166,7 @@ namespace DistrictStylesPlus.Code.GUI
             noZones = UIUtils.CreateButton(this);
             noZones.width = 55;
             noZones.text = "None";
-            noZones.relativePosition = new Vector3(645, 5);
+            noZones.relativePosition = new Vector3(690, 5);
 
             noZones.eventClick += (c, p) =>
             {
@@ -179,7 +189,7 @@ namespace DistrictStylesPlus.Code.GUI
             origin.AddItem("All");
             origin.AddItem("Default");
             origin.AddItem("Custom");
-            origin.AddItem("Cloned");
+            // origin.AddItem("Cloned"); // TODO: when cloning is implemented
             origin.selectedIndex = 0;
             origin.relativePosition = new Vector3(display.relativePosition.x + display.width + 5, 40);
 

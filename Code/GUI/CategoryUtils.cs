@@ -4,8 +4,8 @@
     {
         All,
         Default,
-        Custom,
-        Cloned
+        Custom
+        // Cloned TODO: when cloning is implemented
     }
 
     public enum Status
@@ -32,7 +32,10 @@
         Oil,
         Ore,
         Office,
-        OfficeHightech // gc
+        OfficeHightech, // gc
+        ResidentialWallToWall, // pp
+        CommercialWallToWall,  // pp
+        OfficeWallToWall // pp
     }
 
     public class CategoryIcons
@@ -53,7 +56,10 @@
             "Ingame",
             "Ingame",
             "Thumbnails",
-            "Thumbnails" //gc
+            "Thumbnails", //gc
+            "Thumbnails",
+            "Thumbnails",
+            "Thumbnails"
         };
 
         public static readonly string[] spriteNames = {
@@ -71,7 +77,10 @@
             "IconPolicyOil",
             "IconPolicyOre",
             "ZoningOffice",
-            "DistrictSpecializationHightech"
+            "DistrictSpecializationHightech",
+            "DistrictSpecializationResidentialWallToWall",
+            "DistrictSpecializationCommercialWallToWall",
+            "DistrictSpecializationOfficeWallToWall"
         };
 
         public static readonly string[] tooltips = {
@@ -89,7 +98,10 @@
             "Oil Industry",
             "Ore Industry",
             "Office",
-            "Hightech office"
+            "Hightech office",
+            "Residential wall2wall",
+            "Commercial wall2wall",
+            "Office wall2wall"
         };
     }
 }

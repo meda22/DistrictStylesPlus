@@ -144,8 +144,8 @@ namespace DistrictStylesPlus.Code.GUI
         {
             UICheckBox checkBox = parent.AddUIComponent<UICheckBox>();
 
-            checkBox.width = 35f;
-            checkBox.height = 35f;
+            checkBox.width = 30f;
+            checkBox.height = 30f;
             checkBox.clipChildren = true;
 
             UIPanel panel = checkBox.AddUIComponent<UIPanel>();

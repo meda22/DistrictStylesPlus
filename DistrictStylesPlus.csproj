@@ -20,15 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\_managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\_csl_promenades_dll\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ColossalManaged">
-      <HintPath>..\_managed\ColossalManaged.dll</HintPath>
+      <HintPath>..\..\_csl_promenades_dll\ColossalManaged.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ICities">
-      <HintPath>..\_managed\ICities.dll</HintPath>
+      <HintPath>..\..\_csl_promenades_dll\ICities.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">

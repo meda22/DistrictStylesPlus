@@ -100,6 +100,12 @@ namespace DistrictStylesPlus.Code.GUI
                     return Category.Office;
                 case ItemClass.SubService.OfficeHightech:
                     return Category.OfficeHightech;
+                case ItemClass.SubService.ResidentialWallToWall:
+                    return Category.ResidentialWallToWall;
+                case ItemClass.SubService.CommercialWallToWall:
+                    return Category.CommercialWallToWall;
+                case ItemClass.SubService.OfficeWallToWall:
+                    return Category.OfficeWallToWall;
                 default:
                     return Category.None;
             }
