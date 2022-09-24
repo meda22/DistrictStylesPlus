@@ -45,12 +45,13 @@ namespace DistrictStylesPlus.Code.Managers
                 p[2] = i + 1;
                 
                 var m = AccessTools.Method(typeof(BuildingManager),"ApplyRefreshBuildingsStyles");
-                Logging.DebugLog("INVOKING");
+                Logging.DebugLog("INVOKING ApplyRefreshBuildingStyles");
                 m.Invoke(Singleton<BuildingManager>.instance, p);
             }
             
             // flag we are starting to refresh buildings
             Traverse.Create(Singleton<BuildingManager>.instance).Field("m_buildingsRefreshed").SetValue(true);
+            Logging.DebugLog("Building manager buildings has been refreshed.");
         }
     }
 }

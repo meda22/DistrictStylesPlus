@@ -27,8 +27,7 @@ namespace DistrictStylesPlus.Code.GUI
         private UIDistrictStyleSelectPanel _styleSelectPanel;
         private UIBuildingSelectPanel _buildingSelectPanel;
         private UIBuildingDetailsPanel _buildingDetailsPanel;
-        // TODO: implement all subpanels (styles, buildings, etc.)
-        
+
         /// <summary>
         /// Initialize District style editor panel including button at tool bar.
         /// </summary>
@@ -112,7 +111,7 @@ namespace DistrictStylesPlus.Code.GUI
         private void SetupTitleBar()
         {
             _editorTitleBar = AddUIComponent<UITitleBar>();
-            _editorTitleBar.Title = "Theme Manager";
+            _editorTitleBar.Title = "District Style Editor";
             _editorTitleBar.IconSprite = "ToolbarIconZoomOutCity";
         }
         

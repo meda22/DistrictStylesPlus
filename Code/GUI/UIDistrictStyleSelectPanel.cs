@@ -62,7 +62,7 @@ namespace DistrictStylesPlus.Code.GUI
                     $"Are you sure you want to delete '{SelectedDistrictStyle.Name}' style?",
                     (uiComponent, result) =>
                     {
-                        if (result == 1) DSPDistrictStyleManager.DeleteDistrictStyle(SelectedDistrictStyle);
+                        if (result == 1) DSPDistrictStyleManager.DeleteDistrictStyle(SelectedDistrictStyle, false);
                         SelectedDistrictStyle = null;
                         UIBuildingSelectPanel.Instance.RefreshBuildingInfoSelectList();
                         RefreshDistrictStyleSelect();
@@ -70,7 +70,7 @@ namespace DistrictStylesPlus.Code.GUI
                     });
             };
         }
-        
+
         private void SetupDistrictStyleSelect()
         {
             _districtStyleSelect = UIFastList.Create<UIDistrictStyleItem>(this);

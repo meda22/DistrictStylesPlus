@@ -1,7 +1,6 @@
 ﻿using System;
 using CitiesHarmony.API;
 using DistrictStylesPlus.Code.Patches;
-using DistrictStylesPlus.Code.Utils;
 using ICities;
 
 namespace DistrictStylesPlus.Code
@@ -11,7 +10,7 @@ namespace DistrictStylesPlus.Code
         internal static string modName => "District Styles Plus";
         internal static string version => baseVersion + " " + versionNote;
         internal static string versionNote => "alpha wip";
-        private static string baseVersion => "0.1.1";
+        private static string baseVersion => "0.2.1";
 
         public string Name => modName + " " + version;
         public string Description => "Enhances district styles functionality and extends DS configuration possibilities";
@@ -21,8 +20,6 @@ namespace DistrictStylesPlus.Code
         /// </summary>
         public void OnEnabled()
         {
-            // TODO: load mod settings here if any exists
-            
             // Apply Harmony patches via Cities Harmony.
             // Called here instead of OnCreated to allow the auto-downloader to do its work prior to launch.
             HarmonyHelper.DoOnHarmonyReady(Patcher.PatchAll);

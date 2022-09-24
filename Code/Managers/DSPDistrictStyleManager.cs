@@ -5,6 +5,7 @@ using System.Reflection;
 using ColossalFramework;
 using DistrictStylesPlus.Code.Utils;
 using HarmonyLib;
+using JetBrains.Annotations;
 
 namespace DistrictStylesPlus.Code.Managers
 {
@@ -42,7 +43,8 @@ namespace DistrictStylesPlus.Code.Managers
         /// Removes District Style by mentioned name
         /// </summary>
         /// <param name="districtStyle">name of DS to remove</param>
-        internal static void DeleteDistrictStyle(DistrictStyle districtStyle)
+        /// <param name="transientStyle">is it transient style</param>
+        internal static void DeleteDistrictStyle(DistrictStyle districtStyle, bool transientStyle)
         {
             // we have to add +1 because 0 in the District means a Default style.
             // Yet styles in DistrictManager are counted from 0 without any Default style value!
@@ -62,20 +64,22 @@ namespace DistrictStylesPlus.Code.Managers
                 {
                     districts[i].m_Style--;
                 }
-                
-                // process removing from modded district styles configs
-                // TODO: not needed now, because we are not saving any data to SAVEGAME
-                // var districtStylesConfig = Singleton<BuildingThemes2Manager>.instance.DistrictStylesConfigs[i];
-                // districtStylesConfig?.StylesNames?.Remove(districtStyle.FullName);
             }
 
             // create new district styles list for districtManager - for vanilla functionality
             Singleton<DistrictManager>.instance.m_Styles = Singleton<DistrictManager>.instance.m_Styles
                 .Where(instanceStyle => !instanceStyle.FullName.Equals(districtStyle.FullName)).ToArray();
-            
-            // remove district style package
-            DSPDistrictStylePackageManager.RemoveDistrictStylePackage(districtStyle.FullName);
-            
+
+            // if deleted style is not an transient style
+            if (!transientStyle)
+            {
+                // remove district style package
+                DSPDistrictStylePackageManager.RemoveDistrictStylePackage(districtStyle.FullName);
+                
+                // remove style from transient styles
+                DSPTransientStyleManager.RemoveDeletedDistrictStyleFromTransients(districtStyle.FullName);
+            }
+
             // refresh style buildings in building manager
             Singleton<DSPBuildingManager>.instance.RefreshStylesInBuildingManager();
         }
@@ -90,8 +94,12 @@ namespace DistrictStylesPlus.Code.Managers
             if (buildingInfos == null || !buildingInfos.Any() || districtStyle == null) return;
 
             var refreshNeeded = false;
-            
-            foreach (var buildingInfo in buildingInfos.Where(buildingInfo => buildingInfo != null && !districtStyle.Contains(buildingInfo)))
+
+            var validatedBuildingInfos = buildingInfos
+                .Where(buildingInfo => buildingInfo != null && !districtStyle.Contains(buildingInfo))
+                .ToList();
+
+            foreach (var buildingInfo in validatedBuildingInfos)
             {
                 Logging.DebugLog($"Building Info: {buildingInfo} - districtStyle: {districtStyle} - dsBIs: {districtStyle.GetBuildingInfos()}");
                 districtStyle.Add(buildingInfo);
@@ -99,6 +107,10 @@ namespace DistrictStylesPlus.Code.Managers
             }
 
             if (!refreshNeeded) return;
+            
+            // update transient styles if they use updated district style
+            DSPTransientStyleManager.ModifyTransientStylesByDSBuildingInfos(
+                new List<BuildingInfo>(validatedBuildingInfos), districtStyle.FullName, true);
             
             DSPDistrictStylePackageManager.RefreshDistrictStyleAssetsMetaData(districtStyle);
             DSPBuildingManager.instance.RefreshStylesInBuildingManager();
@@ -116,6 +128,11 @@ namespace DistrictStylesPlus.Code.Managers
             DSPDistrictStylePackageManager.AddAssetToDistrictStyleMetaData(districtStyle.Name, buildingInfo.name);
             
             Logging.DebugLog($"Adding {buildingInfo} from {districtStyle.Name}");
+            
+            // update transient styles if they use updated district style
+            DSPTransientStyleManager.ModifyTransientStylesByDSBuildingInfos(
+                new List<BuildingInfo> {buildingInfo}, districtStyle.FullName, true);
+            
             DSPBuildingManager.instance.RefreshStylesInBuildingManager();
         }
         
@@ -132,6 +149,11 @@ namespace DistrictStylesPlus.Code.Managers
             var reducedAssetList = districtStyle.GetBuildingInfos().Except(buildingInfos);
             Traverse.Create(districtStyle).Field("m_Infos").SetValue(new HashSet<BuildingInfo>(reducedAssetList));
             DSPDistrictStylePackageManager.RefreshDistrictStyleAssetsMetaData(districtStyle);
+            
+            // update transient styles if they use updated district style
+            DSPTransientStyleManager.ModifyTransientStylesByDSBuildingInfos(
+                new List<BuildingInfo>(buildingInfos), districtStyle.FullName, false);
+            
             DSPBuildingManager.instance.RefreshStylesInBuildingManager();
         } 
         
@@ -153,7 +175,7 @@ namespace DistrictStylesPlus.Code.Managers
             if (buildingInfosFieldInfo == null)
             {
                 Logging.ErrorLog("District style does not have field m_Infos!");
-                return; // TODO: this should rather be an exception
+                return; 
             }
             buildingInfosFieldInfo.SetValue(districtStyle, new HashSet<BuildingInfo>(newBuildingInfoArray));
 
@@ -161,6 +183,11 @@ namespace DistrictStylesPlus.Code.Managers
             DSPDistrictStylePackageManager.RemoveAssetFromDistrictStyleMetaData(districtStyle.Name, buildingInfo.name);
             
             Logging.DebugLog($"Removing {buildingInfo} from {districtStyle.Name}");
+            
+            // update transient styles if they use updated district style
+            DSPTransientStyleManager.ModifyTransientStylesByDSBuildingInfos(
+                new List<BuildingInfo> {buildingInfo}, districtStyle.FullName, false);
+            
             DSPBuildingManager.instance.RefreshStylesInBuildingManager();
         }
 
@@ -168,11 +195,12 @@ namespace DistrictStylesPlus.Code.Managers
         /// Returns district style id by district style full name. It is counted from 0. There is no value for "default".
         /// </summary>
         /// <returns>district style id in district manager</returns>
-        private static ushort GetDistrictStyleIdByFullName(string fullName)
+        internal static ushort GetDistrictStyleIdByFullName(string fullName)
         {
             var districtStyles = Singleton<DistrictManager>.instance.m_Styles;
             
-            if (districtStyles == null) return 0;
+            if (districtStyles == null) return 0; // TODO: this is wrong - 0 is not default but first style!!!
+            // TODO: above works only because style at 0 is builtIn style!!! so it can't be deleted!
             
             for (ushort i = 0; i < districtStyles.Length; i++)
             {
@@ -184,12 +212,37 @@ namespace DistrictStylesPlus.Code.Managers
             }
             return 0;
         }
+
+        /// <summary>
+        /// Returns District Style (or Transient Style) or it returns null.
+        /// </summary>
+        /// <param name="styleFullName"></param>
+        /// <returns></returns>
+        [CanBeNull]
+        internal static DistrictStyle GetDistrictStyleByFullName(string styleFullName)
+        {
+            var districtStyles = DistrictManager.instance.m_Styles;
+
+            if (districtStyles == null || districtStyles.Length == 0)
+            {
+                return null;
+            }
+
+            try
+            {
+                return districtStyles.First(ds => ds.FullName.Equals(styleFullName));
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+        }
         
         /// <summary>
         /// Refresh affected services (zones) by this district style according its buildings
         /// </summary>
         /// <param name="districtStyle">target district style</param>
-        private static void RefreshDistrictStyleAffectedService(DistrictStyle districtStyle)
+        internal static void RefreshDistrictStyleAffectedService(DistrictStyle districtStyle)
         {
             // get private field DistrictStyle.m_AffectedServices
             var affectedServicesFiledInfo = GetDistrictStyleClassField("m_AffectedServices", districtStyle);
@@ -224,7 +277,7 @@ namespace DistrictStylesPlus.Code.Managers
             }
         }
         
-        private static FieldInfo GetDistrictStyleClassField(string fieldName, DistrictStyle districtStyle)
+        internal static FieldInfo GetDistrictStyleClassField(string fieldName, DistrictStyle districtStyle)
         {
             // TODO: whole this method can be replaced by HarmonyLib accessTools
             var type = districtStyle.GetType();

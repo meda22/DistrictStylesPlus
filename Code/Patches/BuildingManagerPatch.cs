@@ -23,7 +23,8 @@ namespace DistrictStylesPlus.Code.Patches
         {
             if (ModSettings.checkServiceLevel) return; // we are using vanilla way - do nothing
             
-            Logging.DebugLog($"Search for {service} - {subService} - {width} - {length} - {zoningMode}");
+            // TODO: eventually remove completely - produces too much logs
+            // Logging.DebugLog($"Search for {service} - {subService} - {width} - {length} - {zoningMode}");
             
             if (__result == null) return; // result is null - do nothing
             
@@ -31,7 +32,7 @@ namespace DistrictStylesPlus.Code.Patches
 
             var districtStyle = Singleton<DistrictManager>.instance.m_Styles[style];
             
-            Logging.DebugLog($"Chosen style: {districtStyle.Name} and chosen building: {__result.name}");
+            // Logging.DebugLog($"Chosen style: {districtStyle.Name} and chosen building: {__result.name}");
             
             var affectedServices = (HashSet<int>) AccessTools
                 .Field(districtStyle.GetType(), "m_AffectedServices")
@@ -45,12 +46,12 @@ namespace DistrictStylesPlus.Code.Patches
             // if district affects zone type but does not contains given building, do not allow to spawn it.
             if (affectsZoneType && !districtStyle.Contains(__result))
             {
-                Logging.DebugLog($"FORBID!!! Chosen style: {districtStyle.Name} and chosen building: {__result.name}");
+                // Logging.DebugLog($"FORBID!!! Chosen style: {districtStyle.Name} and chosen building: {__result.name}");
                 __result = null;
                 return;
             }
             
-            Logging.DebugLog($"ALLOW!!! Chosen style: {districtStyle.Name} and chosen building: {__result.name}");
+            // Logging.DebugLog($"ALLOW!!! Chosen style: {districtStyle.Name} and chosen building: {__result.name}");
         }
         
     }

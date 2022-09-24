@@ -1,6 +1,7 @@
 ﻿using System;
 using ColossalFramework;
 using DistrictStylesPlus.Code.GUI;
+using DistrictStylesPlus.Code.GUI.DistrictStylePicker;
 using DistrictStylesPlus.Code.Managers;
 using DistrictStylesPlus.Code.Patches;
 using DistrictStylesPlus.Code.Utils;
@@ -80,6 +81,9 @@ namespace DistrictStylesPlus.Code
             DistrictStyleEditorPanel.Initialize();
             MainButtonPanel.Initialize();
             UIStylesSelectorReplacer.AddStyleSelectorToCityPanel();
+            UIStylesSelectorReplacer.AddStylePickerToDistrictPanel();
+            DistrictStylePickerPanel.Initialize();
+            DSPTransientStyleManager.LoadDataFromSave();
 
             Logging.InfoLog("loading complete");
         }
