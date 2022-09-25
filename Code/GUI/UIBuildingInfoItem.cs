@@ -111,7 +111,7 @@ namespace DistrictStylesPlus.Code.GUI
 
         private void SetupControls()
         {
-            if (m_name != null) return; // TODO: check why this is needed...
+            if (m_name != null) return;
 
             // set up panel basics
             isVisible = true;
@@ -144,15 +144,6 @@ namespace DistrictStylesPlus.Code.GUI
             m_name.clipChildren = false;
             m_name.relativePosition = new Vector3(5, 13);
             
-            /**
-             * TODO: it should change only on click - do not run event on any scrolling
-             * Problem is that FastList shows only partion of data... when new row is created, it changes checkbox
-             * and that calls eventCheckChanged. We have to make a different approach.
-             * There has to be some check of building info in DistrictStyle itself to correctly identify a change.
-             *
-             * seems SOLVED! BY FOLLOWING:
-             * I shoud just check if building is already included in style.. And refresh fastlist after adding/removing
-             */
             m_name.eventCheckChanged += (c, state) =>
             {
                 if (state)
@@ -163,9 +154,6 @@ namespace DistrictStylesPlus.Code.GUI
                     {
                         DSPDistrictStyleManager
                             .AddBuildingInfoToStyle(m_buildingInfo, UIDistrictStyleSelectPanel.SelectedDistrictStyle);
-                        // TODO: we do not need to call it here!?
-                        // UIDistrictStyleManager.instance.DistrictStyleMetaDataList 
-                        //     = DistrictStyleManager.GetDistrictStyleMetaDataList(); 
                     }
                 }
                 else
@@ -179,11 +167,8 @@ namespace DistrictStylesPlus.Code.GUI
                     }
                 } 
                 
-                // TODO: is it needed?
                 UIDistrictStyleSelectPanel.Instance.RefreshDistrictStyleSelectList();
                 UIBuildingSelectPanel.Instance.RefreshBuildingInfoSelectList();
-
-                // TODO: implement event when checked/unchecked 
             };
         }
 

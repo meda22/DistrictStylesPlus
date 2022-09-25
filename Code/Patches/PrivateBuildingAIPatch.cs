@@ -57,9 +57,9 @@ namespace DistrictStylesPlus.Code.Patches
             if (keepAppearance)
             {
                 BuildingManager buildingManager = Singleton<BuildingManager>.instance;
-                EffectInfo levelupEffect = buildingManager.m_properties.m_levelupEffect;
+                EffectInfo levelUpEffect = buildingManager.m_properties.m_levelupEffect;
 
-                if (levelupEffect != null)
+                if (levelUpEffect != null)
                 {
                     InstanceID instanceID = default(InstanceID);
                     instanceID.Building = buildingID;
@@ -68,7 +68,7 @@ namespace DistrictStylesPlus.Code.Patches
                     buildingData.CalculateMeshPosition(out meshPosition, out meshRotation);
                     Matrix4x4 matrix4x = Matrix4x4.TRS(meshPosition, meshRotation, Vector3.one);
                     EffectInfo.SpawnArea spawnArea = new EffectInfo.SpawnArea(matrix4x, __instance.m_info.m_lodMeshData);
-                    Singleton<EffectManager>.instance.DispatchEffect(levelupEffect, instanceID, spawnArea, Vector3.zero, 0f, 1f, buildingManager.m_audioGroup);
+                    Singleton<EffectManager>.instance.DispatchEffect(levelUpEffect, instanceID, spawnArea, Vector3.zero, 0f, 1f, buildingManager.m_audioGroup);
                 }
                 
                 Vector3 position = buildingData.m_position;

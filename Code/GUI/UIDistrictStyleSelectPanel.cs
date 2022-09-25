@@ -28,9 +28,7 @@ namespace DistrictStylesPlus.Code.GUI
         
         internal void RefreshDistrictStyleSelect()
         {
-            _districtStyleSelect.rowsData.m_buffer = Singleton<DistrictManager>.instance.m_Styles;
-            _districtStyleSelect.rowsData.m_size = _districtStyleSelect.rowsData.m_buffer.Length;
-            _districtStyleSelect.DisplayAt(0);
+            _districtStyleSelect.rowsData = GetStoredDistrictStyles();
         }
 
         private void SetupAddStyleButton()
@@ -62,7 +60,7 @@ namespace DistrictStylesPlus.Code.GUI
                     $"Are you sure you want to delete '{SelectedDistrictStyle.Name}' style?",
                     (uiComponent, result) =>
                     {
-                        if (result == 1) DSPDistrictStyleManager.DeleteDistrictStyle(SelectedDistrictStyle);
+                        if (result == 1) DSPDistrictStyleManager.DeleteDistrictStyle(SelectedDistrictStyle, false);
                         SelectedDistrictStyle = null;
                         UIBuildingSelectPanel.Instance.RefreshBuildingInfoSelectList();
                         RefreshDistrictStyleSelect();
@@ -70,7 +68,7 @@ namespace DistrictStylesPlus.Code.GUI
                     });
             };
         }
-        
+
         private void SetupDistrictStyleSelect()
         {
             _districtStyleSelect = UIFastList.Create<UIDistrictStyleItem>(this);
@@ -82,9 +80,7 @@ namespace DistrictStylesPlus.Code.GUI
             _districtStyleSelect.autoHideScrollbar = true;
             _districtStyleSelect.relativePosition = Vector3.zero;
 
-            _districtStyleSelect.rowsData.m_buffer = Singleton<DistrictManager>.instance.m_Styles;
-            _districtStyleSelect.rowsData.m_size = _districtStyleSelect.rowsData.m_buffer.Length;
-            _districtStyleSelect.DisplayAt(0);
+            _districtStyleSelect.rowsData = GetStoredDistrictStyles();
 
             _districtStyleSelect.eventSelectedIndexChanged += (component, value) =>
             {
@@ -106,6 +102,23 @@ namespace DistrictStylesPlus.Code.GUI
         internal void RefreshDistrictStyleSelectList()
         {
             _districtStyleSelect.Refresh();
+        }
+
+        private FastList<object> GetStoredDistrictStyles()
+        {
+            var districtStyles = Singleton<DistrictManager>.instance.m_Styles;
+
+            var resultData = new FastList<object>();
+            if (districtStyles.Length <= 0) return resultData;
+            
+            foreach (var districtStyle in districtStyles)
+            {
+                if (districtStyle.PackageName.Equals(DSPTransientStyleManager.TransientStylePackage)) continue;
+                
+                resultData.Add(districtStyle);
+            }
+
+            return resultData;
         }
     }
 }

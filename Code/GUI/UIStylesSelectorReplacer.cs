@@ -1,5 +1,8 @@
 ﻿using ColossalFramework;
 using ColossalFramework.UI;
+using DistrictStylesPlus.Code.GUI.DistrictStylePicker;
+using DistrictStylesPlus.Code.Utils;
+using HarmonyLib;
 using UnityEngine;
 
 namespace DistrictStylesPlus.Code.GUI
@@ -19,85 +22,40 @@ namespace DistrictStylesPlus.Code.GUI
             var cityInfoPanel = GameObject.Find("(Library) CityInfoPanel").GetComponent<CityInfoPanel>();
             var policiesButton = cityInfoPanel.Find("PoliciesButton").GetComponent<UIButton>();
             var parent = policiesButton.parent;
-
-            // TODO: solve positioning 
-            var cityStyleSelector = UIUtils.CreatePlainDropDown(parent, CityStyleSelectorName);
-            cityStyleSelector.relativePosition = new Vector3(200, 0, 0);
-            cityStyleSelector.listPosition = UIDropDown.PopupListPosition.Above;
-
-            if (cityStyleSelector != null)
-            {
-                cityStyleSelector.eventSelectedIndexChanged += OnStyleChanged;
-            }
-        }
-
-        /// <summary>
-        /// Set a new style to city.
-        /// </summary>
-        private static void OnStyleChanged(UIComponent c, int styleId)
-        {
-            byte districtId = 0; // 0 means city
-            if (Singleton<DistrictManager>.exists)
-            {
-                Singleton<DistrictManager>.instance.m_districts.m_buffer[districtId].m_Style = (ushort)styleId;
-            }
-        }
-
-        /// <summary>
-        /// Populate style selector with actual existing styles.
-        /// Mostly copied from DistrictWorldInfoPanel.OnSetTarget.
-        /// TODO: is it possible to reuse UIComponents?
-        /// TODO: clean up this method
-        /// </summary>
-        internal static void PopulateCityStyleSelector()
-        {
-            if (GameObject.Find(CityStyleSelectorName) == null) return;
-
-            var cityStyleSelector = GameObject.Find(CityStyleSelectorName).GetComponent<UIDropDown>();
             
-            var isEuTheme = false;
-            if (Singleton<SimulationManager>.exists && Singleton<SimulationManager>.instance.m_metaData != null)
+            var stylePickerButton = UIUtils.CreateButton(parent);
+            stylePickerButton.name = "cityStylesPicker";
+            stylePickerButton.text = "STYLES";
+            stylePickerButton.relativePosition = new Vector3(300, 0, 0);
+            stylePickerButton.eventClick += (component, clickEvent) =>
             {
-                isEuTheme = Singleton<SimulationManager>.instance.m_metaData.m_environment == "Europe";
-            }
-            if (Singleton<DistrictManager>.exists && Singleton<DistrictManager>.instance.m_Styles != null)
-            {
-                if (Singleton<DistrictManager>.instance.m_Styles.Length == 0)
+                if (!clickEvent.used)
                 {
-                    cityStyleSelector.items = new string[1];
-                    cityStyleSelector.items[0] = ColossalFramework.Globalization.Locale.Get("STYLES_DEFAULT");
-                    cityStyleSelector.isEnabled = false;
-                    cityStyleSelector.tooltip = ColossalFramework.Globalization.Locale.Get("STYLES_MISSING_TOOLTIP");
+                    DistrictStylePickerPanel.instance.Toggle(0);
                 }
-                else
-                {
-                    string[] array = new string[1 + Singleton<DistrictManager>.instance.m_Styles.Length];
-                    array[0] = ColossalFramework.Globalization.Locale.Get("STYLES_DEFAULT");
-                    for (ushort num = 0; num < Singleton<DistrictManager>.instance.m_Styles.Length; num = (ushort)(num + 1))
-                    {
-                        DistrictStyle districtStyle = Singleton<DistrictManager>.instance.m_Styles[num];
-                        string text = districtStyle.Name;
-                        if (districtStyle.BuiltIn)
-                        {
-                            if (districtStyle.Name.Equals(DistrictStyle.kEuropeanStyleName))
-                            {
-                                text = ColossalFramework.Globalization.Locale.Get((!isEuTheme) ? "STYLES_EUROPEAN" : "STYLES_NORMAL");
-                            }
-                            else if (districtStyle.Name.Equals(DistrictStyle.kEuropeanSuburbiaStyleName))
-                            {
-                                text = ColossalFramework.Globalization.Locale.Get("STYLES_EUROPEANSUBURBIA");
-                            }
-                            else if (districtStyle.Name.Equals(DistrictStyle.kModderPack5StyleName))
-                            {
-                                text = ColossalFramework.Globalization.Locale.Get("STYLES_MODDERPACKFIVE");
-                            }
-                        }
-                        array[1 + num] = text;
-                    }
-                    cityStyleSelector.items = array;
-                    cityStyleSelector.selectedIndex = Singleton<DistrictManager>.instance.m_districts.m_buffer[0].m_Style;
-                }
-            }
+            };
         }
+
+        public static void AddStylePickerToDistrictPanel()
+        {
+            var districtInfoPanel = GameObject.Find("(Library) DistrictWorldInfoPanel").GetComponent<DistrictWorldInfoPanel>();
+            var policiesButton = districtInfoPanel.Find("PoliciesButton").GetComponent<UIButton>();
+            var parent = policiesButton.parent;
+            
+            var stylePickerButton = UIUtils.CreateButton(parent);
+            stylePickerButton.name = "districtStylesPicker";
+            stylePickerButton.text = "STYLES";
+            stylePickerButton.relativePosition = new Vector3(220, 0, 0);
+            stylePickerButton.eventClick += (component, clickEvent) =>
+            {
+                if (clickEvent.used) return;
+                var currentInstanceID = WorldInfoPanel.GetCurrentInstanceID();
+                DistrictStylePickerPanel.instance.Toggle(currentInstanceID.District);
+            };
+            
+            var uiDropDown = UIView.Find<UIDropDown>("StyleDropdown");
+            uiDropDown.Hide();
+        }
+
     }
 }
