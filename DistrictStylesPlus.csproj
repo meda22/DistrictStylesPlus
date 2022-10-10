@@ -14,6 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CitiesHarmony.API" Version="2.1.0" />
+    <PackageReference Include="UnifiedUILib" Version="2.2.12" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -42,8 +43,10 @@
     </PropertyGroup>
     <ItemGroup>
       <ModFiles Include="$(TargetDir)*.*" />
+      <_Resources Include="$(ProjectDir)/Resources/*.*" />
     </ItemGroup>
     <RemoveDir Directories="$(ModDirectory)" />
     <Copy SourceFiles="@(ModFiles)" DestinationFolder="$(ModDirectory)" />
+    <Copy SourceFiles="@(_Resources)" DestinationFolder="$(ModDirectory)/Resources" />
   </Target>
 </Project>

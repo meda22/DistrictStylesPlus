@@ -11,8 +11,6 @@ namespace DistrictStylesPlus.Code.Managers
         /// </summary>
         internal readonly List<BuildingInfo> BuildingInfoList = new List<BuildingInfo>();
 
-        public static readonly HashSet<ushort> KeepSameAppearanceBuildingIds = new HashSet<ushort>();
-        
         /// <summary>
         /// Initial setup of BuildingThemeManager
         /// </summary>

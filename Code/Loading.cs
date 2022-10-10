@@ -16,6 +16,7 @@ namespace DistrictStylesPlus.Code
     {
 
         internal static bool IsModEnabled = false;
+        internal static bool IsModLoaded = false;
         private static bool _harmonyLoaded = false;
 
         /// <summary>
@@ -79,13 +80,14 @@ namespace DistrictStylesPlus.Code
             
             Singleton<DistrictStylesPlusManager>.instance.SetupDistrictStylesPlusManager();
             DistrictStyleEditorPanel.Initialize();
-            MainButtonPanel.Initialize();
+            DistrictStylesEditorButton.CreateDistrictStylesEditorButton();
             UIStylesSelectorReplacer.AddStyleSelectorToCityPanel();
             UIStylesSelectorReplacer.AddStylePickerToDistrictPanel();
             DistrictStylePickerPanel.Initialize();
             DSPTransientStyleManager.LoadDataFromSave();
 
             Logging.InfoLog("loading complete");
+            IsModLoaded = true;
         }
     }
 }

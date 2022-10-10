@@ -10,7 +10,7 @@ namespace DistrictStylesPlus.Code
         internal static string modName => "District Styles Plus";
         internal static string version => baseVersion + " " + versionNote;
         internal static string versionNote => "alpha wip";
-        private static string baseVersion => "0.3.0";
+        private static string baseVersion => "0.3.1";
 
         public string Name => modName + " " + version;
         public string Description => "Enhances district styles functionality and extends DS configuration possibilities";
@@ -65,13 +65,13 @@ namespace DistrictStylesPlus.Code
                         ModSettings.checkServiceLevel = c; 
                         SettingsUtils.SaveSettings();
                     });
-                
+
                 group.AddCheckbox(
-                    "Keep building appearance on upgrade if new does not exist", 
-                    ModSettings.allowUpgradeSameAppearance, 
+                    "Show standalone District Styles Editor button", 
+                    ModSettings.showDistrictStylesEditorButton, 
                     delegate(bool c)
                     {
-                        ModSettings.allowUpgradeSameAppearance = c; 
+                        ModSettings.showDistrictStylesEditorButton = c; 
                         SettingsUtils.SaveSettings();
                     });
             }

@@ -1,6 +1,9 @@
 ﻿using System;
 using ColossalFramework.UI;
 using DistrictStylesPlus.Code.Utils;
+using Epic.OnlineServices.Leaderboards;
+using ICities;
+using UnifiedUI.Helpers;
 using UnityEngine;
 
 namespace DistrictStylesPlus.Code.GUI
@@ -28,6 +31,8 @@ namespace DistrictStylesPlus.Code.GUI
         private UIBuildingSelectPanel _buildingSelectPanel;
         private UIBuildingDetailsPanel _buildingDetailsPanel;
 
+        private UUICustomButton _uuiButton; 
+
         /// <summary>
         /// Initialize District style editor panel including button at tool bar.
         /// </summary>
@@ -54,7 +59,23 @@ namespace DistrictStylesPlus.Code.GUI
                 Logging.LogException(e, "Exception when initializing DistrictStyleEditorPanel");
             }
         }
-        
+
+        public override void Awake()
+        {
+            base.Awake();
+
+            var iconPath = UUIHelpers.GetFullPath<DistrictStylesPlusMod>("Resources", "DSEdit.png");
+            var icon = UUIHelpers.LoadTexture(iconPath);
+
+            _uuiButton = UUIHelpers.RegisterCustomButton(
+                name: nameof(DistrictStylesPlusMod),
+                groupName: null,
+                tooltip: "Open district styles editor",
+                icon: icon, 
+                onToggle: (value) => Toggle()
+            );
+        }
+
         /// <summary>
         /// Destroy gameObject of District Styles Editor
         /// </summary>

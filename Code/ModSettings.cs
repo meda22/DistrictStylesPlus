@@ -1,7 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using System.Xml.Serialization;
+using DistrictStylesPlus.Code.GUI;
 using DistrictStylesPlus.Code.Utils;
 
 namespace DistrictStylesPlus.Code
@@ -11,9 +11,33 @@ namespace DistrictStylesPlus.Code
     /// </summary>
     public static class ModSettings
     {
-        internal static bool enableDebugLog = false;
-        internal static bool checkServiceLevel = true;
-        internal static bool allowUpgradeSameAppearance = false;
+        internal static bool enableDebugLog { get; set; } = false;
+        internal static bool checkServiceLevel { get; set; } = true;
+        internal static float dsEditorButtonPosX { get; set; } = 0;
+        internal static float dsEditorButtonPoxY { get; set; } = 0;
+
+        private static bool _showDistrictStylesEditorButton = true;
+        internal static bool showDistrictStylesEditorButton
+        {
+            get => _showDistrictStylesEditorButton;
+
+            set
+            {
+                _showDistrictStylesEditorButton = value;
+
+                // mod is not loaded, do nothing
+                if (!Loading.IsModLoaded) return;
+                
+                if (value)
+                {
+                    DistrictStylesEditorButton.CreateDistrictStylesEditorButton();
+                }
+                else
+                {
+                    DistrictStylesEditorButton.DestroyDistrictStylesEditorButton();
+                }
+            }
+        }
     }
     
 
@@ -39,14 +63,28 @@ namespace DistrictStylesPlus.Code
             get => ModSettings.checkServiceLevel;
             set => ModSettings.checkServiceLevel = value;
         }
-        
-        [XmlElement("allowUpgradeSameAppearance")]
-        public bool allowUpgradeSameAppearance
+
+        [XmlElement("dsEditorButtonPosX")]
+        public float dsEditorButtonPosX
         {
-            get => ModSettings.allowUpgradeSameAppearance;
-            set => ModSettings.allowUpgradeSameAppearance = value;
+            get => ModSettings.dsEditorButtonPosX;
+            set => ModSettings.dsEditorButtonPosX = value;
+        }
+
+        [XmlElement("dsEditorButtonPoxY")]
+        public float dsEditorButtonPoxY
+        {
+            get => ModSettings.dsEditorButtonPoxY;
+            set => ModSettings.dsEditorButtonPoxY = value;
         }
         
+        [XmlElement("showDistrictStylesEditorButton")]
+        public bool showDistrictStylesEditorButton
+        {
+            get => ModSettings.showDistrictStylesEditorButton;
+            set => ModSettings.showDistrictStylesEditorButton = value;
+        }
+
     }
     
     ///<summary>
