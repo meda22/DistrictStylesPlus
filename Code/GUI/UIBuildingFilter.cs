@@ -20,6 +20,7 @@ namespace DistrictStylesPlus.Code.GUI
         public UITextField nameFilter;
         public UITextField minHeightFilter;
         public UITextField maxHeightFilter;
+        public UIDropDown orderBySelect;
 
         public int maxBuildingHeight
         {
@@ -93,6 +94,8 @@ namespace DistrictStylesPlus.Code.GUI
         {
             get { return (Status)status.selectedIndex; }
         }
+
+        public int orderBy => orderBySelect.selectedIndex;
 
         public event PropertyChangedEventHandler<int> eventFilteringChanged;
 
@@ -321,7 +324,25 @@ namespace DistrictStylesPlus.Code.GUI
             maxHeightFilter.eventTextChanged += (c, s) => eventFilteringChanged(this, 7);
             maxHeightFilter.eventTextSubmitted += (c, s) => eventFilteringChanged(this, 7);
             
+            // Order By
+            UILabel orderByLabel = AddUIComponent<UILabel>();
+            orderByLabel.textScale = 0.8f;
+            orderByLabel.padding = new RectOffset(0, 0, 8, 0);
+            orderByLabel.text = "Order By: ";
+            orderByLabel.relativePosition = new Vector3(sizeFilterY.relativePosition.x + 20, 40);
+
+            orderBySelect = UIUtils.CreateDropDown(this);
+            orderBySelect.width = 100;
+            orderBySelect.AddItem("Name");
+            orderBySelect.AddItem("Zone");
+            orderBySelect.AddItem("Level");
+            orderBySelect.AddItem("Size");
+            orderBySelect.AddItem("Height");
+            orderBySelect.selectedIndex = 0;
             
+            orderBySelect.relativePosition = new Vector3(orderByLabel.relativePosition.x + orderByLabel.width + 5, 40);
+
+            orderBySelect.eventSelectedIndexChanged += (c, i) => eventFilteringChanged(this, 8);
         }
     }
 }

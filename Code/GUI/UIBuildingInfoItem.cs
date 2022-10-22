@@ -15,6 +15,7 @@ namespace DistrictStylesPlus.Code.GUI
         private UILabel m_size;
         private UIPanel m_background;
         private BuildingInfo m_buildingInfo;
+        private UILabel m_height;
 
         public void Display(object data, bool isRowOdd)
         {
@@ -36,6 +37,7 @@ namespace DistrictStylesPlus.Code.GUI
 
             m_level.text = "L" + BuildingInfoHelper.GetLevelNumber(m_buildingInfo);
             m_size.text = BuildingInfoHelper.GetFootprintDimension(m_buildingInfo);
+            m_height.text = BuildingInfoHelper.GetBuildingHeight(m_buildingInfo) + "m";
 
             var buildingCategoryId = (int) BuildingInfoHelper.GetBuildingCategory(m_buildingInfo);
             if (buildingCategoryId != -1) {
@@ -195,19 +197,24 @@ namespace DistrictStylesPlus.Code.GUI
 
         private void SetupBuildingBasicAttributeLabels()
         {
+            m_height = AddUIComponent<UILabel>();
+            m_height.width = 40;
+            m_height.textAlignment = UIHorizontalAlignment.Center;
+            m_height.relativePosition = new Vector3(width - 50f, 15);
+            
             m_size = AddUIComponent<UILabel>();
             m_size.width = 30;
             m_size.textAlignment = UIHorizontalAlignment.Center;
-            m_size.relativePosition = new Vector3(width - 40f, 15);
+            m_size.relativePosition = new Vector3(width - 90f, 15);
 
             m_level = AddUIComponent<UILabel>();
             m_level.width = 30;
             m_level.textAlignment = UIHorizontalAlignment.Center;
-            m_level.relativePosition = new Vector3(width - 70f, 15);
+            m_level.relativePosition = new Vector3(width - 120f, 15);
 
             m_categorySprite = AddUIComponent<UISprite>();
             m_categorySprite.size = new Vector2(20, 20);
-            m_categorySprite.relativePosition = new Vector3(width - 100f, 10);
+            m_categorySprite.relativePosition = new Vector3(width - 150f, 10);
         }
     }
 }
