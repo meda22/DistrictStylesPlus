@@ -11,6 +11,13 @@ namespace DistrictStylesPlus.Code.GUI
 {
     public class UIBuildingSelectPanel : UIPanel
     {
+        private const int OrderByName = 0;
+        private const int OrderByZone = 1;
+        private const int OrderByLevel = 2;
+        private const int OrderBySize = 3;
+        private const int OrderByHeight = 4;
+
+        
         private UIFastList _buildingInfoSelect;
         private UILabel _includeLabel;
         private UIButton _includeAllButton;
@@ -62,26 +69,13 @@ namespace DistrictStylesPlus.Code.GUI
                     SelectedBuildingInfo = _buildingInfoSelect.selectedItem as BuildingInfo;
                 }
             };
-
-            // TODO: add event mouse leave
+            
             _buildingInfoSelect.eventMouseLeave += (component, param) =>
             {
                 if (SelectedBuildingInfo != null)
                     UIBuildingDetailsPanel.instance.UpdateBuildingInfo(SelectedBuildingInfo);
             };
         }
-
-        // TODO: how to register right click
-        // public override void Update()
-        // {
-        //     base.Update();
-        //     
-        //     Logging.DebugLog("Je tu CLICK!");
-        //     if (Input.GetMouseButtonDown(1))
-        //     {
-        //         Logging.DebugLog("Je tu PRAVY Click.");
-        //     }
-        // }
 
         private FastList<object> FilterBuildingInfoList(List<BuildingInfo> buildingInfos)
         {
@@ -133,20 +127,36 @@ namespace DistrictStylesPlus.Code.GUI
             var resultData = new FastList<object>();
 
             if (filteredData.Count <= 0) return resultData;
+
+            var sorted = SortBy(UIBuildingFilter.Instance.orderBy, filteredData);
             
-            var sorted = filteredData
-                .OrderBy(item => ((BuildingInfo)item).m_class.m_service)
-                .ThenBy(item => ((BuildingInfo)item).m_class.m_subService)
-                .ThenBy(item => ((BuildingInfo)item).m_class.m_level)
-                .ThenBy(item => ((BuildingInfo)item).m_cellWidth)
-                .ThenBy(item => ((BuildingInfo)item).m_cellLength)
-                .ThenBy(item => BuildingInfoHelper.GetBuildingHeight((BuildingInfo)item));
             foreach (var o in sorted)
             {
                 resultData.Add(o);
             }
 
             return resultData;
+        }
+        
+        private static IEnumerable<object> SortBy(int chosenOrder, IEnumerable<object> data)
+        {
+            switch (chosenOrder)
+            {
+                case OrderByName:
+                    return data.OrderBy(item => BuildingInfoHelper.GetDisplayName(((BuildingInfo)item).name));
+                case OrderByZone:
+                    return data.OrderBy(item => ((BuildingInfo)item).m_class.m_service)
+                        .ThenBy(item => ((BuildingInfo)item).m_class.m_subService);
+                case OrderByLevel:
+                    return data.OrderBy(item => ((BuildingInfo)item).m_class.m_level);
+                case OrderBySize:
+                    return data.OrderBy(item => ((BuildingInfo)item).m_cellWidth)
+                        .ThenBy(item => ((BuildingInfo)item).m_cellLength);
+                case OrderByHeight:
+                    return data.OrderBy(item => BuildingInfoHelper.GetBuildingHeight((BuildingInfo)item));
+                default:
+                    return data.OrderBy(item => BuildingInfoHelper.GetDisplayName(((BuildingInfo)item).name));
+            }
         }
 
         private static bool FitExpectedSize(Vector2 expectedSize, BuildingInfo buildingInfo)

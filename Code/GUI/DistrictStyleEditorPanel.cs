@@ -12,7 +12,7 @@ namespace DistrictStylesPlus.Code.GUI
     {
         #region Constant values for UI formatting
         private const float StyleSelectPanelWidth = 250;
-        private const float BuildingSelectPanelWidth = 500;
+        private const float BuildingSelectPanelWidth = 520;
         private const float BuildingDetailsPanelWidth = 250;
         private const float Height = 550;
         internal const float Spacing = 5;
