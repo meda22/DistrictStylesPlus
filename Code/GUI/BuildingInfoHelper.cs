@@ -60,7 +60,6 @@ namespace DistrictStylesPlus.Code.GUI
 
         /**
          * Returns building category - which correspond to the building subService. It is used in filtering.
-         * TODO: make filter to use rather subService value.
          */
         internal static Category GetBuildingCategory(BuildingInfo buildingInfo)
         {

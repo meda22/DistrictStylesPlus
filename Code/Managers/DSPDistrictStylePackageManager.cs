@@ -188,7 +188,7 @@ namespace DistrictStylesPlus.Code.Managers
             PackageManager.ForcePackagesChanged();
         }
         
-        private static string GetPackageAssetName(string buildingInfoName)
+        internal static string GetPackageAssetName(string buildingInfoName)
         {
             var assetName = buildingInfoName.Replace("_Data", "");
             // For vanilla buildings

@@ -7,6 +7,12 @@
 
 ---------------------------------------------------------------------------------------------------
 
-Multiple styles per district
 
-- TODO: remove transient styles from DSEditor
+IMPORT BUILDING THEMES
+
+- for testing steam shared themes using following:
+used theme from steam id: 482273700   (buildings also downloaded)
+
+- also - we have to add build-in style for vanilla buildings
+
+- check include all button - it seems it is removing all not-downloaded assets from style

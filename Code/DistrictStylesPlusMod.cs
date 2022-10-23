@@ -1,5 +1,7 @@
 ﻿using System;
 using CitiesHarmony.API;
+using ColossalFramework.UI;
+using DistrictStylesPlus.Code.BuildingThemesImport;
 using DistrictStylesPlus.Code.Patches;
 using ICities;
 
@@ -10,7 +12,7 @@ namespace DistrictStylesPlus.Code
         internal static string modName => "District Styles Plus";
         internal static string version => baseVersion + " " + versionNote;
         internal static string versionNote => "alpha wip";
-        private static string baseVersion => "0.3.2";
+        private static string baseVersion => "0.4.0";
 
         public string Name => modName + " " + version;
         public string Description => "Enhances district styles functionality and extends DS configuration possibilities";
@@ -43,12 +45,12 @@ namespace DistrictStylesPlus.Code
 
         public void OnSettingsUI(UIHelperBase uiHelperBase)
         {
-            var group = uiHelperBase.AddGroup("District Styles Plus");
+            var basicModSettingsGroup = uiHelperBase.AddGroup("District Styles Plus");
 
             try
             {
 
-                group.AddCheckbox(
+                basicModSettingsGroup.AddCheckbox(
                     "Generate Debug Log", 
                     ModSettings.enableDebugLog, 
                     delegate(bool c)
@@ -57,7 +59,7 @@ namespace DistrictStylesPlus.Code
                         SettingsUtils.SaveSettings();
                     });
                 
-                group.AddCheckbox(
+                basicModSettingsGroup.AddCheckbox(
                     "Check affected services by level too", 
                     ModSettings.checkServiceLevel, 
                     delegate(bool c)
@@ -66,7 +68,7 @@ namespace DistrictStylesPlus.Code
                         SettingsUtils.SaveSettings();
                     });
 
-                group.AddCheckbox(
+                basicModSettingsGroup.AddCheckbox(
                     "Show standalone District Styles Editor button", 
                     ModSettings.showDistrictStylesEditorButton, 
                     delegate(bool c)
@@ -77,10 +79,32 @@ namespace DistrictStylesPlus.Code
             }
             catch (Exception)
             {
-                group.AddGroup("District Styles Plus is unable to read the DistrictStylesPlus.xml file\n" +
+                basicModSettingsGroup.AddGroup("District Styles Plus is unable to read the DistrictStylesPlus.xml file\n" +
                                "that stores configuration of mod!\n" +
                                "To fix it, delete this file and restart the game:\n" +
                                "{Steam folder}\\steamapps\\common\\Cities_Skylines\\DistrictStylesPlus.xml");
+            }
+            
+            if (Loading.CheckImportAllowed())
+            {
+                var importThemesGroup = uiHelperBase.AddGroup("Import Building Themes as Styles");
+
+                var btFilePathField = 
+                    importThemesGroup.AddTextfield("Path to BuildingThemes xml file", "", delegate(string text)
+                        {
+                            // nothing to do...
+                        }) 
+                        as UITextField;
+                btFilePathField.width *= 2f;
+
+                importThemesGroup.AddButton("Import Themes", delegate
+                {
+                    BuildingThemesImportManager.ImportBuildingThemes(btFilePathField.text);
+                });
+            }
+            else
+            {
+                uiHelperBase.AddGroup("Import of Building Themes is possible only from main menu. (Before game load)");
             }
         }
         
