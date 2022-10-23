@@ -18,6 +18,12 @@ namespace DistrictStylesPlus.Code
         internal static bool IsModEnabled = false;
         internal static bool IsModLoaded = false;
         private static bool _harmonyLoaded = false;
+        private static bool AllowImport = true;
+
+        internal static bool CheckImportAllowed()
+        {
+            return AllowImport;
+        }
 
         /// <summary>
         /// Called by the game when the mod is initialised at the start of the loading process.
@@ -40,6 +46,8 @@ namespace DistrictStylesPlus.Code
                 Patcher.UnpatchAll();
                 return;
             }
+
+            AllowImport = false;
 
             // Ensure that Harmony patches have been applied.
             _harmonyLoaded = Patcher.patched;
@@ -87,6 +95,7 @@ namespace DistrictStylesPlus.Code
             DSPTransientStyleManager.LoadDataFromSave();
 
             Logging.InfoLog("loading complete");
+            
             IsModLoaded = true;
         }
     }

@@ -192,7 +192,6 @@ namespace DistrictStylesPlus.Code.GUI
             origin.AddItem("All");
             origin.AddItem("Default");
             origin.AddItem("Custom");
-            // origin.AddItem("Cloned"); // TODO: when cloning is implemented
             origin.selectedIndex = 0;
             origin.relativePosition = new Vector3(display.relativePosition.x + display.width + 5, 40);
 
