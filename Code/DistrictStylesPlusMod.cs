@@ -60,7 +60,7 @@ namespace DistrictStylesPlus.Code
                     });
                 
                 basicModSettingsGroup.AddCheckbox(
-                    "Check affected services by level too", 
+                    "Apply styles only for building levels which are included (vanilla behaviour)", 
                     ModSettings.checkServiceLevel, 
                     delegate(bool c)
                     {
@@ -69,7 +69,7 @@ namespace DistrictStylesPlus.Code
                     });
 
                 basicModSettingsGroup.AddCheckbox(
-                    "Show standalone District Styles Editor button", 
+                    "Show standalone District Styles Editor button (UUI button is always shown)", 
                     ModSettings.showDistrictStylesEditorButton, 
                     delegate(bool c)
                     {
