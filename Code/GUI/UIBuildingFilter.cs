@@ -328,7 +328,7 @@ namespace DistrictStylesPlus.Code.GUI
             orderByLabel.textScale = 0.8f;
             orderByLabel.padding = new RectOffset(0, 0, 8, 0);
             orderByLabel.text = "Order By: ";
-            orderByLabel.relativePosition = new Vector3(sizeFilterY.relativePosition.x + 20, 40);
+            orderByLabel.relativePosition = new Vector3(sizeFilterY.relativePosition.x + 50, 40);
 
             orderBySelect = UIUtils.CreateDropDown(this);
             orderBySelect.width = 100;
