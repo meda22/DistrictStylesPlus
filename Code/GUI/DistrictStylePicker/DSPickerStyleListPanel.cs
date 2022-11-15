@@ -53,6 +53,20 @@ namespace DistrictStylesPlus.Code.GUI.DistrictStylePicker
             {
                 if (districtStyle.PackageName.Equals(DSPTransientStyleManager.TransientStylePackage)) continue;
                 
+                // styles for not owned DLCs or CCP should not be shown
+                if (districtStyle.Name.Equals(DistrictStyle.kEuropeanStyleName) 
+                    && !SteamHelper.IsDLCOwned(SteamHelper.DLC.ModderPack3))
+                    continue;
+                if (districtStyle.Name.Equals(DistrictStyle.kModderPack5StyleName) 
+                    && !SteamHelper.IsDLCOwned(SteamHelper.DLC.ModderPack5))
+                    continue;
+                if (districtStyle.Name.Equals(DistrictStyle.kModderPack11StyleName) 
+                    && !SteamHelper.IsDLCOwned(SteamHelper.DLC.ModderPack11))
+                    continue;
+                if (districtStyle.Name.Equals(DistrictStyle.kModderPack14StyleName) 
+                    && !SteamHelper.IsDLCOwned(SteamHelper.DLC.ModderPack14))
+                    continue;
+                
                 resultData.Add(districtStyle);
             }
 
