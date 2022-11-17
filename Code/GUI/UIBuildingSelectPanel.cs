@@ -222,7 +222,6 @@ namespace DistrictStylesPlus.Code.GUI
                 
                 DSPDistrictStyleManager.AddBuildingInfoListToStyle(buildingInfosToInclude, selectedDistrictStyle);
                 
-                // TODO: is it needed?
                 UIDistrictStyleSelectPanel.Instance.RefreshDistrictStyleSelectList();
                 Instance.RefreshBuildingInfoSelectList();
             };

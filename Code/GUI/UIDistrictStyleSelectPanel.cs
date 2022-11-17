@@ -107,7 +107,7 @@ namespace DistrictStylesPlus.Code.GUI
         private FastList<object> GetStoredDistrictStyles()
         {
             var districtStyles = Singleton<DistrictManager>.instance.m_Styles;
-
+            
             var resultData = new FastList<object>();
             if (districtStyles.Length <= 0) return resultData;
             
@@ -132,7 +132,7 @@ namespace DistrictStylesPlus.Code.GUI
 
                 resultData.Add(districtStyle);
             }
-
+            
             return resultData;
         }
         

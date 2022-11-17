@@ -7,22 +7,22 @@ namespace DistrictStylesPlus.Code.GUI.DistrictStylePicker
     public class DSPickerStyleItem : UIPanel, UIFastListRow
     {
 
-        private UICheckBox m_name;
-        private UIPanel m_background;
-        private DistrictStyle m_districtStyle;
+        private UICheckBox _name;
+        private UIPanel _background;
+        private DistrictStyle _districtStyle;
         
         public void Display(object data, bool isRowOdd)
         {
 
-            m_districtStyle = data as DistrictStyle;
+            _districtStyle = data as DistrictStyle;
             SetupControls();
 
-            if (m_districtStyle == null) return;
+            if (_districtStyle == null) return;
             
-            m_name.text = m_districtStyle.Name; 
-            m_name.label.textColor = new Color32(255, 255, 255, 255);
-            m_name.label.isInteractive = false;
-            m_name.isChecked = IsSelectedStyle(m_districtStyle.FullName);
+            _name.text = _districtStyle.Name; 
+            _name.label.textColor = new Color32(255, 255, 255, 255);
+            _name.label.isInteractive = false;
+            _name.isChecked = IsSelectedStyle(_districtStyle.FullName);
         }
 
         public void Select(bool isRowOdd)
@@ -37,13 +37,13 @@ namespace DistrictStylesPlus.Code.GUI.DistrictStylePicker
 
         private bool IsSelectedStyle(string fullName)
         {
-            var selectedStyleFullNames = DistrictStylePickerPanel.instance.GetSelectedStyles();
+            var selectedStyleFullNames = DistrictStylePickerPanelManager.panel.GetSelectedStyles();
             return selectedStyleFullNames.Contains(fullName);
         }
 
         private void SetupControls()
         {
-            if (m_name != null) return;
+            if (_name != null) return;
 
             isVisible = true;
             canFocus = true;
@@ -57,37 +57,37 @@ namespace DistrictStylesPlus.Code.GUI.DistrictStylePicker
 
         private void SetupNameCheckbox()
         {
-            m_name = UIUtils.CreateCheckBox(this);
-            m_name.width = 40;
-            m_name.clipChildren = false;
-            m_name.relativePosition = new Vector3(5, 13);
+            _name = UIUtils.CreateCheckBox(this);
+            _name.width = 40;
+            _name.clipChildren = false;
+            _name.relativePosition = new Vector3(5, 13);
 
-            m_name.eventCheckChanged += (component, state) =>
+            _name.eventCheckChanged += (component, state) =>
             {
                 if (state)
                 {
-                    Logging.DebugLog($"Select DS {m_districtStyle.FullName}");
-                    DistrictStylePickerPanel.instance.AddStyleToSelected(m_districtStyle);
+                    Logging.DebugLog($"Select DS {_districtStyle.FullName}");
+                    DistrictStylePickerPanelManager.panel.AddStyleToSelected(_districtStyle);
                 }
                 else
                 {
-                    Logging.DebugLog($"Remove DS {m_districtStyle.FullName}");
-                    DistrictStylePickerPanel.instance.RemoveStyleFromSelected(m_districtStyle);
+                    Logging.DebugLog($"Remove DS {_districtStyle.FullName}");
+                    DistrictStylePickerPanelManager.panel.RemoveStyleFromSelected(_districtStyle);
                 }
                 
-                DSPickerStyleListPanel.instance.RefreshPickerStyleSelect();
+                DistrictStylePickerPanelManager.panel.RefreshPickerStyleSelect();
             };
         }
         
         private void SetupBackgroundPanel()
         {
-            if (m_background != null) return;
+            if (_background != null) return;
             
-            m_background = AddUIComponent<UIPanel>();
-            m_background.width = width;
-            m_background.height = 40;
-            m_background.relativePosition = Vector2.zero;
-            m_background.zOrder = 0;
+            _background = AddUIComponent<UIPanel>();
+            _background.width = width;
+            _background.height = 40;
+            _background.relativePosition = Vector2.zero;
+            _background.zOrder = 0;
         }
     }
 }

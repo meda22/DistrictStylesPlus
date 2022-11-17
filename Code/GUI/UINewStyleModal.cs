@@ -75,10 +75,14 @@ namespace DistrictStylesPlus.Code.GUI
 
             _okBtn.eventClick += (c, p) =>
             {
-                DSPDistrictStyleManager.CreateDistrictStyle(_name.text);
+                var districtStyle = DSPDistrictStyleManager.CreateDistrictStyle(_name.text);
                 UIDistrictStyleSelectPanel.Instance.RefreshDistrictStyleSelect();
                 UIView.PopModal();
                 Hide();
+                if (districtStyle != null)
+                {
+                    UIDistrictStyleSelectPanel.SelectedDistrictStyle = districtStyle;
+                }
             };
 
             // Cancel

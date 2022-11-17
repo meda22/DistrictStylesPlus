@@ -20,7 +20,7 @@ namespace DistrictStylesPlus.Code.Managers
         /// Creates new in-game district style and also a asset package for it.
         /// </summary>
         /// <param name="districtStyleName">name of new district style</param>
-        internal static void CreateDistrictStyle(string districtStyleName)
+        internal static DistrictStyle CreateDistrictStyle(string districtStyleName)
         {
             var districtStyleMetaData = new DistrictStyleMetaData
             {
@@ -37,6 +37,8 @@ namespace DistrictStylesPlus.Code.Managers
             
             // refresh style buildings in building manager
             Singleton<DSPBuildingManager>.instance.RefreshStylesInBuildingManager();
+
+            return newDistrictStyle;
         }
         
         /// <summary>
@@ -283,6 +285,29 @@ namespace DistrictStylesPlus.Code.Managers
             var type = districtStyle.GetType();
             var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
             return type.GetField(fieldName, bindingFlags);
+        }
+
+        /// <summary>
+        /// Returns list of district styles which are not transient or part of DLC which is not owned.
+        /// </summary>
+        /// <returns>List of non-transient district styles</returns>
+        internal static List<DistrictStyle> GetStoredDistrictStyles()
+        {
+            var allDistrictStyles = Singleton<DistrictManager>.instance.m_Styles;
+
+            if (allDistrictStyles.Length <= 0) return Enumerable.Empty<DistrictStyle>().ToList();
+
+            return allDistrictStyles.Where(style =>
+                !((style.PackageName.Equals(DSPTransientStyleManager.TransientStylePackage))
+                  || (style.Name.Equals(DistrictStyle.kEuropeanStyleName)
+                      && !SteamHelper.IsDLCOwned(SteamHelper.DLC.ModderPack3))
+                  || (style.Name.Equals(DistrictStyle.kModderPack5StyleName)
+                      && !SteamHelper.IsDLCOwned(SteamHelper.DLC.ModderPack5))
+                  || (style.Name.Equals(DistrictStyle.kModderPack11StyleName)
+                      && !SteamHelper.IsDLCOwned(SteamHelper.DLC.ModderPack11))
+                  || (style.Name.Equals(DistrictStyle.kModderPack14StyleName)
+                      && !SteamHelper.IsDLCOwned(SteamHelper.DLC.ModderPack14))
+                    )).ToList();
         }
 
     }

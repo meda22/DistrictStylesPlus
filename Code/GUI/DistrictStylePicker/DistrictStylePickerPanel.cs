@@ -8,6 +8,53 @@ using UnityEngine;
 
 namespace DistrictStylesPlus.Code.GUI.DistrictStylePicker
 {
+
+    /// <summary>
+    /// Static manager of District Style Picker Panel. Based on Algernon's code in Realistic Population mod.
+    /// </summary>
+    public static class DistrictStylePickerPanelManager
+    {
+
+        private static GameObject _uiGameObject;
+        private static DistrictStylePickerPanel _panel;
+        public static DistrictStylePickerPanel panel => _panel;
+
+        internal static void Open(byte districtId)
+        {
+            try
+            {
+                if (_uiGameObject == null)
+                {
+                    _uiGameObject = new GameObject("DSPDistrictStylePickerPanel");
+                    _uiGameObject.transform.parent = UIView.GetAView().transform;
+
+                    _panel = _uiGameObject.AddComponent<DistrictStylePickerPanel>();
+
+                    panel.Setup();
+                }
+
+                panel.SetDistrictData(districtId);
+                panel.Show(true);
+            }
+            catch (Exception e)
+            {
+                Logging.LogException(e, "Cannot open DSPDistrictStylePickerPanel");
+            }
+        }
+
+        internal static void Close()
+        {
+            GameObject.Destroy(_panel);
+            GameObject.Destroy(_uiGameObject);
+            _panel = null;
+            _uiGameObject = null;
+        }
+
+    }
+    
+    /// <summary>
+    /// Class for UI of District Style Picker Panel.
+    /// </summary>
     public class DistrictStylePickerPanel : UIPanel
     {
 
@@ -15,77 +62,24 @@ namespace DistrictStylesPlus.Code.GUI.DistrictStylePicker
         private const float PanelHeight = 500;
         private const float Spacing = 5;
         private const float TitleHeight = 40;
-
-        private static GameObject _gameObject;
-
-        public static DistrictStylePickerPanel instance { get; private set; }
-
-        private UITitleBar _pickerTitleBar;
+        
+        private DSPickerTitleBar _pickerTitleBar;
         private DSPickerStyleListPanel _styleListPanel;
         private UIButton _saveButton;
 
-        private byte m_selectedDistrictId;
-        private HashSet<string> m_selectedStyles = new HashSet<string>();
+        private byte _selectedDistrictId;
+        private HashSet<string> _selectedStyles = new HashSet<string>();
 
-        internal static void Initialize()
+        internal void SetDistrictData(byte districtId)
         {
-            // instance already exists -> do nothing
-            if (instance != null) return;
-
-            try
-            {
-                _gameObject = new GameObject("DSPDistrictStylePickerPanel");
-                _gameObject.transform.parent = UIView.GetAView().transform;
-
-                instance = _gameObject.AddComponent<DistrictStylePickerPanel>();
-                instance.transform.parent = _gameObject.transform.parent;
-
-                instance.DrawDistrictStylePickerPanel();
-                _gameObject.SetActive(false);
-            }
-            catch (Exception e)
-            {
-                Logging.LogException(e, "Exception when initializing DistrictStylePickerPanel");
-            }
+            _selectedDistrictId = districtId;
+            _pickerTitleBar.ChangeTitle($"District Style Picker (districtId: {_selectedDistrictId})");
+            _selectedStyles = DSPTransientStyleManager.GetSelectedStylesForDistrict(_selectedDistrictId);
+            RefreshStyleSelectData();
+            Logging.DebugLog($"Show DS picker for district id {_selectedDistrictId}");
         }
 
-        public static void Destroy()
-        {
-            try
-            {
-                if (_gameObject != null)
-                    GameObject.Destroy(_gameObject);
-            }
-            catch (Exception e)
-            {
-                // Catching any exception to not block the unloading process of other mods
-                Logging.LogException(e, "Exception when destroying DistrictStylePickerPanel");
-            }
-        }
-
-        internal void Toggle(byte districtId)
-        {
-            if (isVisible)
-            {
-                _pickerTitleBar.Title = "District Style Picker";
-                m_selectedStyles = new HashSet<string>();
-                _gameObject.SetActive(false);
-                instance.Hide();
-                Logging.DebugLog($"Hide DS picker for district id {districtId}");
-            }
-            else
-            {
-                _gameObject.SetActive(true);
-                instance.Show(true);
-                m_selectedDistrictId = districtId;
-                _pickerTitleBar.Title = $"District Style Picker (districtId: {m_selectedDistrictId})";
-                m_selectedStyles = DSPTransientStyleManager.GetSelectedStylesForDistrict(m_selectedDistrictId);
-                RefreshStyleSelectData();
-                Logging.DebugLog($"Show DS picker for district id {m_selectedDistrictId}");
-            }
-        }
-
-        private void DrawDistrictStylePickerPanel()
+        internal void Setup()
         {
             backgroundSprite = "UnlockingPanel2";
             isVisible = false;
@@ -98,7 +92,7 @@ namespace DistrictStylesPlus.Code.GUI.DistrictStylePicker
             relativePosition = new Vector3(
                 Mathf.Floor((UIView.GetAView().fixedWidth - width) / 2),
                 Mathf.Floor((UIView.GetAView().fixedHeight - height) / 2));
-
+            
             SetupTitleBar();
             SetupStyleListPanel();
             SetupSaveButton();
@@ -106,15 +100,8 @@ namespace DistrictStylesPlus.Code.GUI.DistrictStylePicker
 
         private void SetupTitleBar()
         {
-            _pickerTitleBar = AddUIComponent(typeof(UITitleBar)) as UITitleBar;
-            if (_pickerTitleBar != null) {
-                _pickerTitleBar.Title = "District Style Picker";
-                _pickerTitleBar.IconSprite = "ToolbarIconZoomOutCity";
-            }
-            else
-            {
-                Logging.ErrorLog("Cannot create title bar for district style picker!");
-            }
+            _pickerTitleBar = AddUIComponent<DSPickerTitleBar>();
+            _pickerTitleBar.Setup("District Style Picker");
         }
 
         private void SetupStyleListPanel()
@@ -123,6 +110,7 @@ namespace DistrictStylesPlus.Code.GUI.DistrictStylePicker
             _styleListPanel.width = PanelWidth;
             _styleListPanel.height = PanelHeight - 50;
             _styleListPanel.relativePosition = new Vector3(Spacing, TitleHeight + Spacing);
+            _styleListPanel.Setup();
         }
 
         private void SetupSaveButton()
@@ -134,35 +122,41 @@ namespace DistrictStylesPlus.Code.GUI.DistrictStylePicker
 
             _saveButton.eventClick += (component, param) =>
             {
-                Logging.DebugLog($"save button clicked {m_selectedDistrictId} " +
-                                 $"and styles {string.Join(", ", m_selectedStyles.ToArray())}");
-                DSPTransientStyleManager.SetSelectedStylesForDistrict(m_selectedDistrictId, m_selectedStyles);
-                instance.Hide();
+                Logging.DebugLog($"save button clicked {_selectedDistrictId} " +
+                                 $"and styles {string.Join(", ", _selectedStyles.ToArray())}");
+                DSPTransientStyleManager.SetSelectedStylesForDistrict(_selectedDistrictId, _selectedStyles);
+
+                DistrictStylePickerPanelManager.Close();
             };
             
         }
 
         internal HashSet<string> GetSelectedStyles()
         {
-            return m_selectedStyles;
+            return _selectedStyles;
         }
 
         internal void AddStyleToSelected(DistrictStyle districtStyle)
         {
-            m_selectedStyles.Add(districtStyle.FullName);
+            _selectedStyles.Add(districtStyle.FullName);
         }
 
         internal void RemoveStyleFromSelected(DistrictStyle districtStyle)
         {
-            m_selectedStyles.Remove(districtStyle.FullName);
+            _selectedStyles.Remove(districtStyle.FullName);
+        }
+
+        internal void RefreshPickerStyleSelect()
+        {
+            if (_styleListPanel != null) _styleListPanel.RefreshPickerStyleSelect();
         }
 
         private void RefreshStyleSelectData()
         {
-            if (DSPickerStyleListPanel.instance == null) return; // nothing to refresh
+            if (_styleListPanel == null) return;
             
-            DSPickerStyleListPanel.instance.RefreshStoredDistrictStyles();
-            DSPickerStyleListPanel.instance.RefreshPickerStyleSelect();
+            _styleListPanel.RefreshStoredDistrictStyles();
+            _styleListPanel.RefreshPickerStyleSelect();
         }
     }
 }

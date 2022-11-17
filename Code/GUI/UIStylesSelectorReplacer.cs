@@ -31,7 +31,7 @@ namespace DistrictStylesPlus.Code.GUI
             {
                 if (!clickEvent.used)
                 {
-                    DistrictStylePickerPanel.instance.Toggle(0);
+                    DistrictStylePickerPanelManager.Open(0);
                 }
             };
         }
@@ -50,7 +50,7 @@ namespace DistrictStylesPlus.Code.GUI
             {
                 if (clickEvent.used) return;
                 var currentInstanceID = WorldInfoPanel.GetCurrentInstanceID();
-                DistrictStylePickerPanel.instance.Toggle(currentInstanceID.District);
+                DistrictStylePickerPanelManager.Open(currentInstanceID.District);
             };
             
             var uiDropDown = UIView.Find<UIDropDown>("StyleDropdown");

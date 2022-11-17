@@ -91,7 +91,6 @@ namespace DistrictStylesPlus.Code
             DistrictStylesEditorButton.CreateDistrictStylesEditorButton();
             UIStylesSelectorReplacer.AddStyleSelectorToCityPanel();
             UIStylesSelectorReplacer.AddStylePickerToDistrictPanel();
-            DistrictStylePickerPanel.Initialize();
             DSPTransientStyleManager.LoadDataFromSave();
 
             Logging.InfoLog("loading complete");

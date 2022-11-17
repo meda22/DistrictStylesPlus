@@ -7,12 +7,16 @@
 
 ---------------------------------------------------------------------------------------------------
 
-
-IMPORT BUILDING THEMES
-
-- for testing steam shared themes using following:
-used theme from steam id: 482273700   (buildings also downloaded)
-
-- also - we have to add build-in style for vanilla buildings
-
 - check include all button - it seems it is removing all not-downloaded assets from style
+
+
+IMPROVING OF SAVING OF STYLE
+- changes in style should be saved in only following cases:
+    1. when new style button is clicked
+    2. when different style is selected
+    3. when editor window is closed
+    4. when editor is toggled (Toggle method)
+    
+- add possibility to enable/disable "saving question" - each above mentioned actions will raise a question if save changes
+
+- add saving question to style selection window on "x" close
