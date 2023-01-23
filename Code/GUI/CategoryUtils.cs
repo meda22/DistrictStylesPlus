@@ -35,7 +35,8 @@
         OfficeHightech, // gc
         ResidentialWallToWall, // pp
         CommercialWallToWall,  // pp
-        OfficeWallToWall // pp
+        OfficeWallToWall, // pp
+        OfficeFinancial // fd
     }
 
     public class CategoryIcons
@@ -59,6 +60,7 @@
             "Thumbnails", //gc
             "Thumbnails",
             "Thumbnails",
+            "Thumbnails",
             "Thumbnails"
         };
 
@@ -80,7 +82,8 @@
             "DistrictSpecializationHightech",
             "DistrictSpecializationResidentialWallToWall",
             "DistrictSpecializationCommercialWallToWall",
-            "DistrictSpecializationOfficeWallToWall"
+            "DistrictSpecializationOfficeWallToWall",
+            "DistrictSpecializationOfficeFinancial"
         };
 
         public static readonly string[] tooltips = {
@@ -101,7 +104,8 @@
             "Hightech office",
             "Residential wall2wall",
             "Commercial wall2wall",
-            "Office wall2wall"
+            "Office wall2wall",
+            "Office financial"
         };
     }
 }

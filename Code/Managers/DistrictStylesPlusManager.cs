@@ -1,42 +1,27 @@
-﻿using System.Collections.Generic;
-using ColossalFramework;
+﻿using ColossalFramework;
 
 namespace DistrictStylesPlus.Code.Managers
 {
     public class DistrictStylesPlusManager : Singleton<DistrictStylesPlusManager>
     {
-
-        /// <summary>
-        /// List of all growable assets in game
-        /// </summary>
-        internal readonly List<BuildingInfo> BuildingInfoList = new List<BuildingInfo>();
-
         /// <summary>
         /// Initial setup of BuildingThemeManager
         /// </summary>
         public void SetupDistrictStylesPlusManager()
         {
-            SetupBuildingInfoList();
             DSPDistrictStylePackageManager.AddEmptyEnabledStylesToGame();
             DSPDistrictStylePackageManager.LoadVanillaBuildingsToStyles();
-            DSPBuildingManager.instance.RefreshStylesInBuildingManager();
+            SimulationManager.instance.AddAction(() => DSPBuildingManager.instance.RefreshStylesInBuildingManager());
         }
         
-        private void SetupBuildingInfoList()
+        internal static bool IsPrefabGrowable(BuildingInfo buildingInfo)
         {
-            for (uint i = 0; i < PrefabCollection<BuildingInfo>.PrefabCount(); i++)
-            {
-                var buildingInfo = PrefabCollection<BuildingInfo>.GetPrefab(i);
-
-                if (buildingInfo == null) continue;
-
-                var privateServiceIndex = ItemClass.GetPrivateServiceIndex(buildingInfo.GetService());
-
-                // if building is not growable asset do nothing
-                if (privateServiceIndex == -1) continue;
-
-                BuildingInfoList.Add(buildingInfo);
-            }
+            var prefabAI = buildingInfo.GetAI();
+            return prefabAI != null 
+                   && !prefabAI.ToString().Contains("PloppableRICO")
+                   && (prefabAI is CommercialBuildingAI || prefabAI is ResidentialBuildingAI ||
+                       prefabAI is IndustrialBuildingAI || prefabAI is IndustrialExtractorAI ||
+                       prefabAI is LivestockExtractorAI || prefabAI is OfficeBuildingAI);
         }
     }
 }

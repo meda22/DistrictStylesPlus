@@ -8,7 +8,7 @@ namespace DistrictStylesPlus.Code.GUI
     {
         public static UIBuildingFilter Instance { get; private set; }
         
-        private const int NumOfCategories = 18; // 18 types after new Promenades_Plazas DLC
+        private const int NumOfCategories = 19; // 19 types after new Financial Districts DLC
         public UICheckBox[] zoningToggles;
         public UIButton allZones;
         public UIButton noZones;
@@ -67,7 +67,8 @@ namespace DistrictStylesPlus.Code.GUI
                 zoningToggles[(int)Category.OfficeHightech].isChecked &&
                 zoningToggles[(int)Category.ResidentialWallToWall].isChecked &&
                 zoningToggles[(int)Category.CommercialWallToWall].isChecked &&
-                zoningToggles[(int)Category.OfficeWallToWall].isChecked;
+                zoningToggles[(int)Category.OfficeWallToWall].isChecked &&
+                zoningToggles[(int)Category.OfficeFinancial].isChecked;
         }
 
         public ItemClass.Level buildingLevel
@@ -152,10 +153,15 @@ namespace DistrictStylesPlus.Code.GUI
                 zoningToggles[(int)Category.OfficeWallToWall].isVisible = false;
             }
 
+            if (!PlatformService.IsDlcInstalled(SteamHelper.kFinancialDistrictsDLCAppID))
+            {
+                zoningToggles[(int)Category.OfficeFinancial].isVisible = false;
+            }
+
             allZones = UIUtils.CreateButton(this);
             allZones.width = 40;
             allZones.text = "All";
-            allZones.relativePosition = new Vector3(645, 5);
+            allZones.relativePosition = new Vector3(675, 5);
 
             allZones.eventClick += (c, p) =>
             {
@@ -169,7 +175,7 @@ namespace DistrictStylesPlus.Code.GUI
             noZones = UIUtils.CreateButton(this);
             noZones.width = 55;
             noZones.text = "None";
-            noZones.relativePosition = new Vector3(690, 5);
+            noZones.relativePosition = new Vector3(720, 5);
 
             noZones.eventClick += (c, p) =>
             {

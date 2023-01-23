@@ -45,8 +45,7 @@ namespace DistrictStylesPlus.Code.GUI
 
         internal void FilterAndRefreshBuildingInfoSelectList()
         {
-            _buildingInfoSelect.rowsData =
-                FilterBuildingInfoList(Singleton<DistrictStylesPlusManager>.instance.BuildingInfoList);
+            _buildingInfoSelect.rowsData = FilterBuildingInfoList();
         }
 
         private void SetupBuildingInfoSelect()
@@ -60,8 +59,7 @@ namespace DistrictStylesPlus.Code.GUI
             _buildingInfoSelect.autoHideScrollbar = true;
             _buildingInfoSelect.relativePosition = Vector3.zero;
 
-            _buildingInfoSelect.rowsData =
-                FilterBuildingInfoList(Singleton<DistrictStylesPlusManager>.instance.BuildingInfoList);
+            _buildingInfoSelect.rowsData = FilterBuildingInfoList();
             
             _buildingInfoSelect.eventSelectedIndexChanged += (component, value) =>
             {
@@ -77,14 +75,18 @@ namespace DistrictStylesPlus.Code.GUI
             };
         }
 
-        private FastList<object> FilterBuildingInfoList(List<BuildingInfo> buildingInfos)
+        private FastList<object> FilterBuildingInfoList()
         {
             var filteredData = new List<object>();
             var selectedDistrictStyle = UIDistrictStyleSelectPanel.SelectedDistrictStyle;
             
-            for (var i = 0; i < buildingInfos.Count; i++)
+            for (uint i = 0; i < PrefabCollection<BuildingInfo>.LoadedCount(); i++)
             {
-                BuildingInfo item = buildingInfos[i];
+                BuildingInfo item = PrefabCollection<BuildingInfo>.GetLoaded(i);
+
+                if (item == null) continue;
+
+                if (!DistrictStylesPlusManager.IsPrefabGrowable(item)) continue;
 
                 // Origin
                 if (UIBuildingFilter.Instance.buildingOrigin == Origin.Default && BuildingInfoHelper.IsCustomAsset(item.name)) continue;
