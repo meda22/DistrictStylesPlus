@@ -18,7 +18,7 @@ namespace DistrictStylesPlus.Code.Managers
         {
             var prefabAI = buildingInfo.GetAI();
             return prefabAI != null 
-                   && !prefabAI.ToString().Contains("PloppableRICO")
+                   && !prefabAI.ToString().Contains("PloppableRICO.Ploppable")
                    && (prefabAI is CommercialBuildingAI || prefabAI is ResidentialBuildingAI ||
                        prefabAI is IndustrialBuildingAI || prefabAI is IndustrialExtractorAI ||
                        prefabAI is LivestockExtractorAI || prefabAI is OfficeBuildingAI);
